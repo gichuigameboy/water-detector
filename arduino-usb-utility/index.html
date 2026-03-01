@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino USB Utility</title>
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>Arduino USB Utility</h1>
+            <p>Connect your Arduino Uno to the dashboard via USB</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Connection Status -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Connection Status</h2>
+                    <div class="status-indicator" id="connectionStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Disconnected</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="connection-info">
+                        <div class="info-row">
+                            <span class="label">Port:</span>
+                            <span class="value" id="currentPort">Not connected</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Baud Rate:</span>
+                            <span class="value" id="currentBaudRate">-</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Last Data:</span>
+                            <span class="value" id="lastDataTime">-</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Port Configuration -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Arduino Configuration</h2>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label for="portSelect">Select USB Port</label>
+                        <select id="portSelect">
+                            <option value="">Select a port...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="baudRateSelect">Baud Rate</label>
+                        <select id="baudRateSelect">
+                            <option value="9600">9600</option>
+                            <option value="19200">19200</option>
+                            <option value="38400">38400</option>
+                            <option value="57600">57600</option>
+                            <option value="115200" selected>115200</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button id="connectBtn" class="btn btn-primary">Connect</button>
+                        <button id="disconnectBtn" class="btn btn-secondary">Disconnect</button>
+                        <button id="refreshBtn" class="btn btn-outline">Refresh Ports</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Supabase Configuration -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Supabase Configuration</h2>
+                    <div class="status-indicator" id="supabaseStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Not configured</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="form-group">
+                        <label for="supabaseUrl">Supabase URL</label>
+                        <input type="url" id="supabaseUrl" placeholder="https://your-project.supabase.co">
+                    </div>
+                    <div class="form-group">
+                        <label for="supabaseKey">Supabase Anon Key</label>
+                        <input type="password" id="supabaseKey" placeholder="Your Supabase anon key">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoConnect">
+                            Auto-connect on startup
+                        </label>
+                    </div>
+                    <div class="button-group">
+                        <button id="saveConfigBtn" class="btn btn-primary">Save Configuration</button>
+                        <button id="testSupabaseBtn" class="btn btn-outline">Test Connection</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sensor Data Display -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Live Sensor Data</h2>
+                    <div class="status-indicator" id="dataStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Waiting for data</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="sensor-grid">
+                        <div class="sensor-card">
+                            <div class="sensor-label">Sensor 1</div>
+                            <div class="sensor-value" id="sensor1Value">--</div>
+                            <div class="sensor-unit">%</div>
+                        </div>
+                        <div class="sensor-card">
+                            <div class="sensor-label">Sensor 2</div>
+                            <div class="sensor-value" id="sensor2Value">--</div>
+                            <div class="sensor-unit">%</div>
+                        </div>
+                        <div class="sensor-card">
+                            <div class="sensor-label">Temperature</div>
+                            <div class="sensor-value" id="tempValue">--</div>
+                            <div class="sensor-unit">°C</div>
+                        </div>
+                    </div>
+                    <div class="data-log">
+                        <h3>Recent Data</h3>
+                        <div id="dataLog" class="log-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Pump Control -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Pump Control</h2>
+                    <div class="status-indicator" id="pumpStatus">
+                        <span class="status-dot"></span>
+                        <span class="status-text">Ready</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="pump-controls">
+                        <button id="pumpOnBtn" class="btn btn-success">Turn Pump ON</button>
+                        <button id="pumpOffBtn" class="btn btn-danger">Turn Pump OFF</button>
+                    </div>
+                    <div class="pump-info">
+                        <p><strong>Note:</strong> Pump commands are sent directly to Arduino via USB.</p>
+                        <p>The web dashboard will read pump status from Supabase.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="src/renderer.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "name": "arduino-usb-utility",
+  "version": "1.0.0",
+  "description": "Desktop utility for Arduino USB communication and Supabase sync",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "keywords": [
+    "arduino",
+    "usb",
+    "serial",
+    "supabase",
+    "desktop"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "@serialport/binding-abstract": "^12.0.0",
+    "@serialport/bindings-cpp": "^12.0.0",
+    "@serialport/parser-readline": "^12.0.0",
+    "@supabase/supabase-js": "^2.45.2",
+    "electron-store": "^9.0.0",
+    "serialport": "^12.0.0"
+  },
+  "devDependencies": {
+    "electron": "^32.0.0",
+    "electron-builder": "^25.0.4"
+  },
+  "build": {
+    "appId": "com.arduino.dashboard.utility",
+    "productName": "Arduino USB Utility",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "target": "dmg"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
