@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react'
 import { weatherService, type WeatherData } from '../services/weatherService'
 
-interface WeatherPageProps {
-  user: {
-    id: string
-    email: string | undefined
-  } | null
-}
-
-export default function WeatherPage({ user }: WeatherPageProps) {
+export default function WeatherPage() {
   // Weather page doesn't currently use user data, but keeping for future features
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null)
   const [loading, setLoading] = useState(true)

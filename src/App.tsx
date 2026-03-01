@@ -1003,7 +1003,7 @@ function App() {
       ) : currentPageState === 'automation' ? (
         <AutomationPage />
       ) : currentPageState === 'weather' ? (
-        <WeatherPage user={user} />
+        <WeatherPage user={user ?? undefined} />
       ) : (
         <ProfilePage user={user} />
       )}

@@ -7,10 +7,18 @@ import type {
   SystemSettingValue
 } from '../types/automation';
 
+// Ensure supabase is available
+const getSupabase = () => {
+  if (!supabase) {
+    throw new Error('Supabase client not configured');
+  }
+  return supabase;
+};
+
 export class AutomationService {
   // Automation Schedules
   async createSchedule(schedule: Omit<AutomationSchedule, 'id' | 'created_at' | 'updated_at'>) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('automation_schedules')
       .insert(schedule)
       .select()
@@ -21,7 +29,7 @@ export class AutomationService {
   }
 
   async getSchedules(userId: string): Promise<AutomationSchedule[]> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('automation_schedules')
       .select('*')
       .eq('user_id', userId)
@@ -32,7 +40,7 @@ export class AutomationService {
   }
 
   async updateSchedule(id: number, updates: Partial<AutomationSchedule>) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('automation_schedules')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
@@ -44,7 +52,7 @@ export class AutomationService {
   }
 
   async deleteSchedule(id: number) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('automation_schedules')
       .delete()
       .eq('id', id);
@@ -54,7 +62,7 @@ export class AutomationService {
 
   // Plant Profiles
   async createPlantProfile(profile: Omit<PlantProfile, 'id' | 'created_at' | 'updated_at'>) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('plant_profiles')
       .insert(profile)
       .select()
@@ -65,7 +73,7 @@ export class AutomationService {
   }
 
   async getPlantProfiles(userId: string): Promise<PlantProfile[]> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('plant_profiles')
       .select('*')
       .eq('user_id', userId)
@@ -76,7 +84,7 @@ export class AutomationService {
   }
 
   async updatePlantProfile(id: number, updates: Partial<PlantProfile>) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('plant_profiles')
       .update({ ...updates, updated_at: new Date().toISOString() })
       .eq('id', id)
@@ -88,7 +96,7 @@ export class AutomationService {
   }
 
   async deletePlantProfile(id: number) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('plant_profiles')
       .delete()
       .eq('id', id);
@@ -98,7 +106,7 @@ export class AutomationService {
 
   // Pump Logs
   async logPumpAction(log: Omit<PumpLog, 'id' | 'created_at'>) {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('pump_logs')
       .insert(log)
       .select()
@@ -109,7 +117,7 @@ export class AutomationService {
   }
 
   async getPumpLogs(userId: string, limit: number = 100): Promise<PumpLog[]> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('pump_logs')
       .select('*')
       .eq('user_id', userId)
@@ -124,7 +132,7 @@ export class AutomationService {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - days);
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('pump_logs')
       .select('*')
       .eq('user_id', userId)
@@ -134,7 +142,7 @@ export class AutomationService {
 
     const stats = {
       total_activations: data?.length || 0,
-      total_duration: data?.reduce((sum: number, log: any) => sum + (log.duration || 0), 0) || 0,
+      total_duration: data?.reduce((sum: number, log: { duration?: number }) => sum + (log.duration || 0), 0) || 0,
       auto_activations: data?.filter((log: PumpLog) => log.reason === 'threshold').length || 0,
       manual_activations: data?.filter((log: PumpLog) => log.reason === 'manual').length || 0,
       scheduled_activations: data?.filter((log: PumpLog) => log.reason === 'schedule').length || 0
@@ -145,7 +153,7 @@ export class AutomationService {
 
   // Weather Data
   async saveWeatherData(data: Omit<WeatherData, 'id' | 'created_at'>) {
-    const { error } = await supabase
+    const { error } = await getSupabase()
       .from('weather_data')
       .insert(data);
 
@@ -153,7 +161,7 @@ export class AutomationService {
   }
 
   async getLatestWeatherData(userId: string, zone: string = 'default'): Promise<WeatherData | null> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('weather_data')
       .select('*')
       .eq('user_id', userId)
@@ -168,7 +176,7 @@ export class AutomationService {
 
   // System Settings
   async getSystemSettings(userId: string): Promise<SystemSettingValue> {
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('system_settings')
       .select('setting_value')
       .eq('user_id', userId)
@@ -184,14 +192,14 @@ export class AutomationService {
     const currentSettings = await this.getSystemSettings(userId);
     const updatedSettings = { ...currentSettings, ...settings };
 
-    const { data, error } = await supabase
+    const { data, error } = await getSupabase()
       .from('system_settings')
-      .upsert({
+      .upsert([{
         user_id: userId,
         setting_key: 'automation_config',
         setting_value: updatedSettings,
         updated_at: new Date().toISOString()
-      }, { onConflict: ['user_id', 'setting_key'] })
+      }], { onConflict: 'user_id,setting_key' })
       .select()
       .single();
 
@@ -251,7 +259,7 @@ export class AutomationService {
 
     for (const schedule of schedules) {
       if (!schedule.is_active) continue;
-      if (!schedule.days_of_week.includes(dayOfWeek)) continue;
+      if (!Array.isArray(schedule.days_of_week) || !schedule.days_of_week.includes(dayOfWeek)) continue;
 
       const scheduleStart = schedule.start_time.slice(0, 5);
       const scheduleEnd = schedule.end_time?.slice(0, 5) || '23:59';
@@ -291,7 +299,7 @@ export class AutomationService {
         parseInt(schedule.start_time.split(':')[1])
       );
 
-      if (scheduleTime > now && schedule.days_of_week.includes(now.getDay())) {
+      if (scheduleTime > now && Array.isArray(schedule.days_of_week) && schedule.days_of_week.includes(now.getDay())) {
         nextScheduled = scheduleTime.toISOString();
         break;
       }
