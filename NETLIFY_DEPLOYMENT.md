@@ -173,7 +173,31 @@ The dashboard is already responsive, but you can:
 After deployment, your users can access:
 - **Main Dashboard:** `https://your-site.netlify.app`
 - **Sign Up:** `https://your-site.netlify.app` (automatic)
+- **Automation:** `https://your-site.netlify.app/automation`
+- **Weather:** `https://your-site.netlify.app/weather`
 - **Profile:** `https://your-site.netlify.app/profile`
+
+## 🌤️ **Weather Feature Configuration:**
+
+### **OpenWeatherMap API Setup:**
+To enable the weather feature, you'll need to add the OpenWeatherMap API key:
+
+1. **Get API Key:**
+   - Sign up at [openweathermap.org](https://openweathermap.org/api)
+   - Get your free API key
+
+2. **Add to Environment Variables:**
+   - In Netlify dashboard, go to "Site settings" → "Environment variables"
+   - Add: `VITE_WEATHER_API_KEY` = your_openweathermap_api_key
+
+3. **Weather Features Available:**
+   - Current weather by geolocation
+   - 5-day forecast
+   - City-based weather search
+   - Real-time weather updates
+
+### **Weather Data Storage:**
+The weather data is automatically stored in your Supabase database in the `weather_data` table, allowing you to track weather patterns over time for your automation system.
 
 ## 🛠️ **Troubleshooting:**
 

@@ -16,6 +16,7 @@ import { supabase, supabaseConfigured } from './supabaseClient'
 import Navigation from './components/Navigation'
 import ProfilePage from './components/ProfilePage'
 import AutomationPage from './components/AutomationPage'
+import WeatherPage from './components/WeatherPage'
 
 type SensorRow = {
   id: string
@@ -117,7 +118,7 @@ function App() {
   const [authName, setAuthName] = useState('')
   const [authError, setAuthError] = useState<string | null>(null)
   const [authSubmitting, setAuthSubmitting] = useState(false)
-  const [currentPageState, setCurrentPageState] = useState<'dashboard' | 'automation' | 'profile'>('dashboard')
+  const [currentPageState, setCurrentPageState] = useState<'dashboard' | 'automation' | 'weather' | 'profile'>('dashboard')
 
   useEffect(() => {
     if (!supabaseReady) {
@@ -538,7 +539,7 @@ function App() {
     }
   }
 
-  const handlePageChange = (page: 'dashboard' | 'automation' | 'profile') => {
+  const handlePageChange = (page: 'dashboard' | 'automation' | 'weather' | 'profile') => {
     setCurrentPageState(page)
   }
 
@@ -1001,6 +1002,8 @@ function App() {
         </main>
       ) : currentPageState === 'automation' ? (
         <AutomationPage />
+      ) : currentPageState === 'weather' ? (
+        <WeatherPage user={user} />
       ) : (
         <ProfilePage user={user} />
       )}
