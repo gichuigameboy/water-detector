@@ -83,6 +83,7 @@ npm start
 - ✅ User authentication and profiles
 - ✅ Data export to CSV
 - ✅ Pump control interface
+- ✅ Weather integration with 5-day forecast
 - ✅ Responsive design
 
 ### Desktop USB Utility
