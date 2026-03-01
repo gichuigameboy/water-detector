@@ -301,7 +301,7 @@ export class AutomationService {
       is_active: settings.automation_enabled,
       current_zone: settings.default_zone,
       last_watering: lastWatering?.created_at || null,
-      next_scheduled,
+      next_scheduled: nextScheduled,
       weather_affected: settings.weather_integration_enabled,
       manual_override: false
     };

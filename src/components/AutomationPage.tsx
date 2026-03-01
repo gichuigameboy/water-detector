@@ -8,18 +8,28 @@ import type {
   PlantProfileFormData
 } from '../types/automation';
 import { AutomationService } from '../services/automationService';
-import { useAuth } from '../hooks/useAuth';
+import { supabase } from '../supabaseClient';
 
 const automationService = new AutomationService();
 
 export default function AutomationPage() {
-  const { user } = useAuth();
+  const [user, setUser] = useState<any>(null);
   const [schedules, setSchedules] = useState<AutomationSchedule[]>([]);
   const [plantProfiles, setPlantProfiles] = useState<PlantProfile[]>([]);
   const [pumpLogs, setPumpLogs] = useState<PumpLog[]>([]);
   const [systemSettings, setSystemSettings] = useState<SystemSettingValue | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'schedules' | 'plants' | 'logs' | 'settings'>('schedules');
+
+  useEffect(() => {
+    const checkUser = async () => {
+      if (supabase) {
+        const { data: { user } } = await supabase.auth.getUser();
+        setUser(user);
+      }
+    };
+    checkUser();
+  }, []);
 
   useEffect(() => {
     if (user) {
