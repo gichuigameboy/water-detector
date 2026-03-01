@@ -4,8 +4,8 @@ import type { User } from '@supabase/supabase-js'
 
 interface NavigationProps {
   user: User | null
-  currentPage: 'dashboard' | 'profile'
-  onPageChange: (page: 'dashboard' | 'profile') => void
+  currentPage: 'dashboard' | 'automation' | 'profile'
+  onPageChange: (page: 'dashboard' | 'automation' | 'profile') => void
   onSignOut: () => void
 }
 
@@ -35,6 +35,12 @@ export default function Navigation({ user, currentPage, onPageChange, onSignOut 
             onClick={() => onPageChange('dashboard')}
           >
             Dashboard
+          </button>
+          <button
+            className={`nav-link ${currentPage === 'automation' ? 'nav-link--active' : ''}`}
+            onClick={() => onPageChange('automation')}
+          >
+            Automation
           </button>
           <button
             className={`nav-link ${currentPage === 'profile' ? 'nav-link--active' : ''}`}
@@ -88,6 +94,15 @@ export default function Navigation({ user, currentPage, onPageChange, onSignOut 
             }}
           >
             Dashboard
+          </button>
+          <button
+            className={`mobile-link ${currentPage === 'automation' ? 'mobile-link--active' : ''}`}
+            onClick={() => {
+              onPageChange('automation')
+              setIsMenuOpen(false)
+            }}
+          >
+            Automation
           </button>
           <button
             className={`mobile-link ${currentPage === 'profile' ? 'mobile-link--active' : ''}`}
